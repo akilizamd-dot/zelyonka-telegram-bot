@@ -1,7 +1,9 @@
-import json
+﻿import json
 import os
 import re
 import time
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -12,7 +14,7 @@ from pathlib import Path
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "").strip()
 API_URL = f"https://api.telegram.org/bot{TOKEN}"
-DATA_PATH = Path(__file__).with_name("zelyonka_data.json")
+DATA_PATH = Path(__file__).with_name("zelyonka_data.json")`r`nPORT = int(os.getenv("PORT", "10000"))
 
 
 BOXES = {
@@ -583,13 +585,27 @@ def handle_update(update):
     handle_text(chat_id, message.get("text", ""))
 
 
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.end_headers()
+        self.wfile.write("The Zelyonka Club bot is running.".encode("utf-8"))
+
+    def log_message(self, format, *args):
+        return
+
+
+def start_health_server():
+    server = HTTPServer(("0.0.0.0", PORT), HealthHandler)
+    print(f"Health server is running on port {PORT}.")
+    server.serve_forever()
 def run():
     if not TOKEN:
         print("Add TELEGRAM_BOT_TOKEN first.")
         return
 
-    print("The Zelyonka Club bot is running.")
-    offset = None
+    threading.Thread(target=start_health_server, daemon=True).start()`r`n    print("The Zelyonka Club bot is running.")`r`n    offset = None
     while True:
         try:
             payload = {"timeout": 30}
@@ -609,3 +625,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+

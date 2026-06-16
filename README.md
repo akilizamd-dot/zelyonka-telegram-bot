@@ -1,4 +1,4 @@
-# The Zelyonka Club Telegram Bot
+﻿# The Zelyonka Club Telegram Bot
 
 Рабочая основа Telegram-бота для клуба Зелёнки.
 
@@ -71,3 +71,19 @@ help - помощь
 Плейлисты сейчас стоят как заглушки. Замени ссылки `https://example.com/...` в файле `bot.py` на свои реальные ссылки.
 
 Заявки по зелёной страховке и фото маленьких побед бот пока сохраняет в файл `zelyonka_data.json` рядом с кодом.
+
+## Бесплатный запуск на Render
+
+На Render выбирай не Background Worker, а Web Service.
+
+Настройки:
+
+- Language: Python 3
+- Build Command: оставить пустым или поставить `pip install -r requirements.txt`
+- Start Command: `python bot.py`
+- Instance Type: Free, если доступен
+- Environment Variables:
+  - `TELEGRAM_BOT_TOKEN` = токен от BotFather
+  - `ADMIN_CHAT_ID` = твой chat id, если хочешь получать заявки себе
+
+Бот внутри запускает маленькую health-страницу для Render и параллельно отвечает в Telegram.
