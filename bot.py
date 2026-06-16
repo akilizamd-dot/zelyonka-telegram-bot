@@ -14,7 +14,8 @@ from pathlib import Path
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "").strip()
 API_URL = f"https://api.telegram.org/bot{TOKEN}"
-DATA_PATH = Path(__file__).with_name("zelyonka_data.json")`r`nPORT = int(os.getenv("PORT", "10000"))
+DATA_PATH = Path(__file__).with_name("zelyonka_data.json")
+PORT = int(os.getenv("PORT", "10000"))
 
 
 BOXES = {
@@ -600,12 +601,16 @@ def start_health_server():
     server = HTTPServer(("0.0.0.0", PORT), HealthHandler)
     print(f"Health server is running on port {PORT}.")
     server.serve_forever()
+
+
 def run():
     if not TOKEN:
         print("Add TELEGRAM_BOT_TOKEN first.")
         return
 
-    threading.Thread(target=start_health_server, daemon=True).start()`r`n    print("The Zelyonka Club bot is running.")`r`n    offset = None
+    threading.Thread(target=start_health_server, daemon=True).start()
+    print("The Zelyonka Club bot is running.")
+    offset = None
     while True:
         try:
             payload = {"timeout": 30}
@@ -625,4 +630,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-
